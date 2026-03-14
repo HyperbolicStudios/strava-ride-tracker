@@ -10,7 +10,7 @@ mapboxgl.accessToken = import.meta.env.VITE_STRAVA_MAPBOX_TOKEN;
 //read summary_stats from json file
 console.log("path", import.meta.env.BASE_URL);
 
-const res = await fetch(`${import.meta.env.BASE_URL}summary_stats.json`);
+const res = await fetch('/strava-ride-tracker/summary_stats.json');
 const summary_stats = await res.json();
 
 function fadeColorMapbox(hex, percent) {
