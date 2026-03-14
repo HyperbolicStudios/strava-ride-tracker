@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import stravaLogo from './assets/images/api_logo_pwrdBy_strava_horiz_orange.png';
+import stravaLogo from './assets/images/api_logo_pwrdBy_strava_horiz_orange.svg';
 
 import ProgressBar from './components/ProgressBar';
 
@@ -175,7 +175,7 @@ map.on('mouseleave', interactiveLayers, (e) => {
           <i class="fa-brands fa-github"></i>
         </a>
         <h1 class='centred-cell'>Mark's Bike Ride Tracker</h1>
-        <img class='centred-cell' src={stravaLogo} alt="Powered by Strava Logo" />
+        <div><img class='centred-cell' src={stravaLogo} alt="Powered by Strava Logo" type="image/svg+xml" /></div>
       </header>
       
       <section id="progress-bars">
