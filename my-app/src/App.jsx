@@ -8,6 +8,8 @@ import ProgressBar from './components/ProgressBar';
 mapboxgl.accessToken = import.meta.env.VITE_STRAVA_MAPBOX_TOKEN;
 
 //read summary_stats from json file
+console.log(import.meta.env.BASE_URL);
+
 const res = await fetch(`${import.meta.env.BASE_URL}summary_stats.json`);
 const summary_stats = await res.json();
 
