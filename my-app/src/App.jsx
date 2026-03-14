@@ -20,7 +20,7 @@ function fadeColorMapbox(hex, percent) {
 }
 
 const geojsonLayers = [
-    //activities layer, no associated progress bar
+  //activities layer, no associated progress bar
   {
     networkName: 'activities',
     path: '/geojson/activities.geojson',
@@ -73,7 +73,7 @@ const geojsonLayers = [
     width: 3,
     highlightOnHover: true
   },
-  
+
 ];
 
 export default function App() {
@@ -106,11 +106,11 @@ export default function App() {
           },
           paint: {
             'line-color': layer.colorByVisited
-              ? ['case', 
-                  ['==', ['get', 'visited'], true], layer.visitedColor, 
-                  ['==', ['get', 'visited'], false], layer.unvisitedColor,
-                  '#888888'  // fallback if visited is missing or unexpected
-                ]
+              ? ['case',
+                ['==', ['get', 'visited'], true], layer.visitedColor,
+                ['==', ['get', 'visited'], false], layer.unvisitedColor,
+                '#888888'  // fallback if visited is missing or unexpected
+              ]
               : layer.color,
             'line-opacity': layer.opacity,
             'line-width': layer.width
@@ -121,46 +121,47 @@ export default function App() {
       //tooltips
       const popup = new mapboxgl.Popup({ closeButton: false, closeOnClick: false });
 
-// Build a lookup from layer id → network name
-const layerMeta = {};
-geojsonLayers.forEach(layer => {
-  const id = layer.path.split('/').pop().replace('.geojson', '') + '-line';
-  layerMeta[id] = { networkName: layer.networkName, visitedColor: layer.visitedColor, highlightOnHover: layer.highlightOnHover };
-});
+      // Build a lookup from layer id → network name
+      const layerMeta = {};
+      geojsonLayers.forEach(layer => {
+        const id = layer.path.split('/').pop().replace('.geojson', '') + '-line';
+        layerMeta[id] = { networkName: layer.networkName, visitedColor: layer.visitedColor, highlightOnHover: layer.highlightOnHover };
+      });
 
-const interactiveLayers = Object.keys(layerMeta);
+      const interactiveLayers = Object.keys(layerMeta);
 
-map.on('mousemove', interactiveLayers, (e) => {
-  console.log(e.features[0].layer.id, layerMeta);
+      map.on('mousemove', interactiveLayers, (e) => {
+        console.log(e.features[0].layer.id, layerMeta);
 
-  map.getCanvas().style.cursor = 'pointer';
-  const layerId = e.features[0].layer.id;
-  const { networkName, highlightOnHover} = layerMeta[layerId];
-  const visited = e.features[0].properties.visited === true 
-    || e.features[0].properties.visited === 'true';
+        map.getCanvas().style.cursor = 'pointer';
+        const layerId = e.features[0].layer.id;
+        const { networkName, highlightOnHover } = layerMeta[layerId];
+        const visited = e.features[0].properties.visited === true
+          || e.features[0].properties.visited === 'true';
 
-  // Highlight and popup only if this layer is configured to highlight on hover
-  if (highlightOnHover) {
-    map.setPaintProperty(layerId, 'line-width', 6);
-    map.setPaintProperty(layerId, 'line-opacity', 1);
+        // Highlight and popup only if this layer is configured to highlight on hover
+        if (highlightOnHover) {
+          map.setPaintProperty(layerId, 'line-width', 6);
+          map.setPaintProperty(layerId, 'line-opacity', 1);
 
-    popup
-      .setLngLat(e.lngLat)
-      .setHTML(`<strong>${networkName}</strong><br/>${visited ? '✅ Visited' : '❌ Not visited'}`)
-      .addTo(map);
-  }});
+          popup
+            .setLngLat(e.lngLat)
+            .setHTML(`<strong>${networkName}</strong><br/>${visited ? '✅ Visited' : '❌ Not visited'}`)
+            .addTo(map);
+        }
+      });
 
-map.on('mouseleave', interactiveLayers, (e) => {
-  map.getCanvas().style.cursor = '';
-  popup.remove();
+      map.on('mouseleave', interactiveLayers, (e) => {
+        map.getCanvas().style.cursor = '';
+        popup.remove();
 
-  // Reset all layers to original widths/opacities
-  geojsonLayers.forEach(layer => {
-    const id = layer.path.split('/').pop().replace('.geojson', '') + '-line';
-    map.setPaintProperty(id, 'line-width', layer.width);
-    map.setPaintProperty(id, 'line-opacity', layer.opacity);
-  });
-});
+        // Reset all layers to original widths/opacities
+        geojsonLayers.forEach(layer => {
+          const id = layer.path.split('/').pop().replace('.geojson', '') + '-line';
+          map.setPaintProperty(id, 'line-width', layer.width);
+          map.setPaintProperty(id, 'line-opacity', layer.opacity);
+        });
+      });
     });
 
     return () => map.remove();
@@ -176,21 +177,21 @@ map.on('mouseleave', interactiveLayers, (e) => {
         <h1 class='centred-cell'>Mark's Bike Ride Tracker</h1>
         <div><img class='centred-cell' src={stravaLogo} alt="Powered by Strava Logo" type="image/svg+xml" /></div>
       </header>
-      
+
       <section id="progress-bars">
         <ProgressBar label="Metro Van Regional Greenway (Complete + Future)" progressColor="#44BA52" percent={summary_stats.mv_regional_greenway_network_2050.visited_percentage}></ProgressBar>
         <ProgressBar label="Translink Major Bikeway Network" progressColor="#074F57" percent={summary_stats.BICCS_MBNTier1NearMediumTermCorridors_view.visited_percentage}></ProgressBar>
         <ProgressBar label="City of Victoria Bike Network" progressColor="#A3E7FC" percent={summary_stats.victoria_bike_network.visited_percentage}></ProgressBar>
         <ProgressBar label="CRD Trail Network" progressColor="#474dea" percent={summary_stats.crd_regional_trails.visited_percentage}></ProgressBar>
       </section>
-      <div ref={mapContainer} class="mapContainer"/>
+      <div ref={mapContainer} class="mapContainer" />
 
-    <section id="info">
-      <p>Data credits: <a href="https://open-data-portal-metrovancouver.hub.arcgis.com/datasets/64dae354287e41b5a5f5b97b2d0e5e3d_2/explore?location=49.138504%2C-122.873263%2C13">Metro Vancouver</a>, <a href="https://regionalroads.com/biccswitteligibility">Translink</a>, <a href="https://developers.strava.com/">Strava</a>, <a href="https://www.crd.ca/government-administration/data-documents/maps-geospatial-data">Capital Regional District</a>, <a href="https://opendata.victoria.ca/datasets/34632d5ee89d40ffa0462e717ae49d0b_23/explore?location=48.428000%2C-123.358300%2C13">City of Victoria</a></p>
+      <section id="info">
+        <p>Data credits: <a href="https://open-data-portal-metrovancouver.hub.arcgis.com/datasets/64dae354287e41b5a5f5b97b2d0e5e3d_2/explore?location=49.138504%2C-122.873263%2C13">Metro Vancouver</a>, <a href="https://regionalroads.com/biccswitteligibility">Translink</a>, <a href="https://developers.strava.com/">Strava</a>, <a href="https://www.crd.ca/government-administration/data-documents/maps-geospatial-data">Capital Regional District</a>, <a href="https://opendata.victoria.ca/datasets/34632d5ee89d40ffa0462e717ae49d0b_23/explore?location=48.428000%2C-123.358300%2C13">City of Victoria</a></p>
 
-      <p>Built by <a href="https://markedwardson.com">Mark Edwardson</a> (my <a class="link-orange" href="https://www.strava.com/athletes/117817092">Strava</a>)</p>
-    </section>
+        <p>Built by <a href="https://markedwardson.com">Mark Edwardson</a> (my <a class="link-orange" href="https://www.strava.com/athletes/117817092">Strava</a>)</p>
+      </section>
     </div>
-    
+
   );
 }
