@@ -1,11 +1,18 @@
 import json
 import time
 import requests
+from dotenv import load_dotenv
+import os
 
-CLIENT_ID = "209627"
-CLIENT_SECRET = "459105eed445bdc936d365c26fc3d8c9dbe10cf3"
+load_dotenv()
 
-credentials = json.load(open("credentials.json"))
+my_var = os.getenv('MY_VAR')
+#read and load .env file
+
+CLIENT_ID = os.getenv('STRAVA_CLIENT_ID')
+CLIENT_SECRET = os.getenv('STRAVA_CLIENT_SECRET')
+
+credentials = json.load(open("strava_credentials.json"))
 
 access_token = credentials["access_token"]
 athlete_id = credentials["athlete"]["id"]
@@ -32,7 +39,7 @@ def update_access_tokens():
             credentials["access_token"] = new_data["access_token"]
             credentials["refresh_token"] = new_data["refresh_token"]
             credentials["expires_at"] = new_data["expires_at"]
-            with open("credentials.json", "w") as f:
+            with open("strava_credentials.json", "w") as f:
                 json.dump(credentials, f)
 
         else:

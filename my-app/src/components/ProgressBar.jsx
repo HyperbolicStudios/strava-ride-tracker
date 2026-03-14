@@ -5,7 +5,7 @@ function fadeColor(color, opacity) {
 export default function ProgressBar({ label, percent, progressColor='green', backgroundColor=null}) {
   if (backgroundColor === null) {
     //set backgroundColor to be the progressColor, but faded
-    backgroundColor = fadeColor(progressColor, 0.3); // add 33 for 20% opacity
+    backgroundColor = fadeColor(progressColor, 0.3); 
   }
 
   return (

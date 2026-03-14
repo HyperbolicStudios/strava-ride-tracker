@@ -55,11 +55,11 @@ i {
 
 .progress-bar-container {
   width: 100%;
-  max-width: 600px;
+  max-width: 700px;
   margin: 20px auto;
   height: 50px;
   display: grid;
-  grid-template-columns: 1.3fr 3fr;
+  grid-template-columns: 1.5fr 3fr;
 
 }
 
@@ -77,6 +77,7 @@ i {
   align-items: center;
   justify-content: center;
   text-align: center;
+  font-size: 15px;
 }
 
 .progress-bar-percentage {
@@ -92,4 +93,14 @@ i {
   height: 70vh;
   display: block;
   margin-left: 10%;
+}
+
+.mapboxgl-popup-content {
+  color: black !important;
+  background-color: white !important;
+}
+
+.mapboxgl-popup-content strong {
+  color: black !important;
+  font-weight: 600;
 }
