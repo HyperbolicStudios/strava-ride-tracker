@@ -139,17 +139,16 @@ map.on('mousemove', interactiveLayers, (e) => {
   const visited = e.features[0].properties.visited === true 
     || e.features[0].properties.visited === 'true';
 
-  // Highlight
+  // Highlight and popup only if this layer is configured to highlight on hover
   if (highlightOnHover) {
     map.setPaintProperty(layerId, 'line-width', 6);
     map.setPaintProperty(layerId, 'line-opacity', 1);
-  }
 
-  popup
-    .setLngLat(e.lngLat)
-    .setHTML(`<strong>${networkName}</strong><br/>${visited ? '✅ Visited' : '❌ Not visited'}`)
-    .addTo(map);
-});
+    popup
+      .setLngLat(e.lngLat)
+      .setHTML(`<strong>${networkName}</strong><br/>${visited ? '✅ Visited' : '❌ Not visited'}`)
+      .addTo(map);
+  }});
 
 map.on('mouseleave', interactiveLayers, (e) => {
   map.getCanvas().style.cursor = '';
@@ -186,6 +185,12 @@ map.on('mouseleave', interactiveLayers, (e) => {
       </section>
       <div ref={mapContainer} class="mapContainer"/>
 
+    <section id="info">
+      <p>Data credits: <a href="https://open-data-portal-metrovancouver.hub.arcgis.com/datasets/64dae354287e41b5a5f5b97b2d0e5e3d_2/explore?location=49.138504%2C-122.873263%2C13">Metro Vancouver</a>, <a href="https://regionalroads.com/biccswitteligibility">Translink</a>, <a href="https://developers.strava.com/">Strava</a>, <a href="https://www.crd.ca/government-administration/data-documents/maps-geospatial-data">Capital Regional District</a>, <a href="https://opendata.victoria.ca/datasets/34632d5ee89d40ffa0462e717ae49d0b_23/explore?location=48.428000%2C-123.358300%2C13">City of Victoria</a></p>
+
+      <p>Built by <a href="https://markedwardson.com">Mark Edwardson</a> (my <a class="link-orange" href="https://www.strava.com/athletes/117817092">Strava</a>)</p>
+    </section>
     </div>
+    
   );
 }

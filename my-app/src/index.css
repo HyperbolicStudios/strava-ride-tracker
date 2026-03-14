@@ -105,3 +105,17 @@ i {
   color: black !important;
   font-weight: 600;
 }
+
+#info {
+  margin: 40px;
+  height: 150px;
+}
+
+#info > p {
+  text-align: center;
+  margin: 15px;
+}
+
+.link-orange {
+  color: #ff7f50;
+}
