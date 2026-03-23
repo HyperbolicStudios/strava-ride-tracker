@@ -7,7 +7,8 @@ export default defineConfig(({ mode }) => {
     base: '/strava-ride-tracker/',
     plugins: [react()],
     define: {
-      'import.meta.env.VITE_STRAVA_MAPBOX_TOKEN': JSON.stringify(env.VITE_STRAVA_MAPBOX_TOKEN)
+      'import.meta.env.VITE_STRAVA_MAPBOX_TOKEN': JSON.stringify(env.VITE_STRAVA_MAPBOX_TOKEN),
+      'import.meta.env.VITE_BLOB_BASE': JSON.stringify(env.VITE_BLOB_BASE)
     },
     build: {
       outDir: '../docs',

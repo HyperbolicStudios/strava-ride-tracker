@@ -4,6 +4,10 @@ import requests
 from dotenv import load_dotenv
 import os
 
+from azure_blob_helper import BlobHelper
+public_blob = BlobHelper('public')
+private_blob = BlobHelper('private')
+
 load_dotenv()
 
 my_var = os.getenv('MY_VAR')
@@ -12,13 +16,13 @@ my_var = os.getenv('MY_VAR')
 CLIENT_ID = os.getenv('STRAVA_CLIENT_ID')
 CLIENT_SECRET = os.getenv('STRAVA_CLIENT_SECRET')
 
-credentials = json.load(open("strava_credentials.json"))
-
-access_token = credentials["access_token"]
-athlete_id = credentials["athlete"]["id"]
-expires_at = credentials["expires_at"]
-
 def update_access_tokens():
+
+    credentials = private_blob.load_data("strava_credentials.json")
+    access_token = credentials["access_token"]
+    athlete_id = credentials["athlete"]["id"]
+    expires_at = credentials["expires_at"]
+    
     if expires_at < int(time.time()):
         print("Short-lived access token has expired. Refreshing...")
 
@@ -39,16 +43,20 @@ def update_access_tokens():
             credentials["access_token"] = new_data["access_token"]
             credentials["refresh_token"] = new_data["refresh_token"]
             credentials["expires_at"] = new_data["expires_at"]
-            with open("strava_credentials.json", "w") as f:
-                json.dump(credentials, f)
+            private_blob.save_data(credentials, "strava_credentials.json")
 
         else:
             print("Failed to refresh token.")
             print(response.text)
-
-update_access_tokens()
+            return None
+    else:
+        print("Access token is still valid.")
+    
+    return credentials["access_token"]
 
 def retrieve_activities():
+    access_token = update_access_tokens()
+
     url = f"https://www.strava.com/api/v3/athlete/activities"
 
     headers = {
@@ -80,10 +88,10 @@ def retrieve_activities():
             print(response.text)
             return None
         
-    return all_activities
+    #write to blob storage as json
+    public_blob.save_data(all_activities, "strava_raw_data.json")
+    print(f"Total activities retrieved and saved to blob: {len(all_activities)}")
+    return
 
-activities = retrieve_activities()
-
-#write to json
-with open("activities.json", "w") as f:
-    json.dump(activities, f)
+if __name__ == "__main__":
+    retrieve_activities()

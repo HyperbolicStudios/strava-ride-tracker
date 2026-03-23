@@ -4,10 +4,20 @@ import urllib.parse
 import requests
 import threading
 
-import json
+from dotenv import load_dotenv
+import os
 
-CLIENT_ID = "209627"
-CLIENT_SECRET = "459105eed445bdc936d365c26fc3d8c9dbe10cf3"
+from azure_blob_helper import BlobHelper
+blob_private = BlobHelper('private')  # Use the private blob container for credentials
+
+load_dotenv()
+
+my_var = os.getenv('MY_VAR')
+#read and load .env file
+
+CLIENT_ID = os.getenv('STRAVA_CLIENT_ID')
+CLIENT_SECRET = os.getenv('STRAVA_CLIENT_SECRET')
+
 REDIRECT_URI = "http://localhost:8000/callback"
 PORT = 8000
 
@@ -82,8 +92,13 @@ def main():
         print(f"Refresh token: {token_data['refresh_token']}")
         print(f"Expires at: {token_data['expires_at']}")
 
-        with open("credentials.json", "w") as f:
-            json.dump(token_data, f)
+        #save credential data to blob storage as json
+        try:
+            blob_private.save_data(token_data, "strava_credentials.json")
+            print("Credentials saved to blob storage.")
+        except Exception as e:
+            print(f"Error saving credentials to blob storage: {e}")
+
     else:
         print("Failed to get authorization code.")
 
