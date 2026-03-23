@@ -1,4 +1,11 @@
+# Python
+__pycache__/
+*.pyc
 .env
-strava_credentials.json
-activities.json
+
+# Node
 react-app/node_modules/
+react-app/dist/
+
+# Azure Functions
+azure-function-app/local.settings.json
