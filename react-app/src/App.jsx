@@ -16,7 +16,7 @@ const geojsonLayers = [
     networkName: "Regional Greenway Network",
     path: 'mv_regional_greenway_network_2050.geojson',
     colorByVisited: true,
-    visitedColor: '#44BA52',
+    visitedColor: '#4cdc5d',
     unvisitedColor: 'red',
     opacity: .8,
     width: 3,
@@ -83,7 +83,7 @@ export default function App() {
       container: mapContainer.current,
       style: 'mapbox://styles/mapbox/dark-v11',
       center: [-123, 49],
-      zoom: 10
+      zoom: 8
     });
 
     map.on('load', () => {
@@ -92,13 +92,17 @@ export default function App() {
 
         map.addSource(id, {
           type: 'geojson',
-          data: `${BLOB_BASE}/public/${layer.path}`
+          data: `${BLOB_BASE}/public/${layer.path}`,
+          buffer: 256,
+          tolerance: 0,
+          generateId: true
         });
 
         map.addLayer({
           id: `${id}-line`,
           type: 'line',
           source: id,
+          minzoom: 0,
           layout: { 'line-join': 'round', 'line-cap': 'round' },
           paint: {
             'line-color': layer.colorByVisited
