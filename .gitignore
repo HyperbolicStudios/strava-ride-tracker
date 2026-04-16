@@ -2,3 +2,4 @@
 strava_credentials.json
 activities.json
 react-app/node_modules/
+*.pyc
