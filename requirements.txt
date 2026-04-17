@@ -13,3 +13,4 @@ pyogrio
 mapclassify
 requests
 python-dotenv
+requests
