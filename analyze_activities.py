@@ -130,7 +130,7 @@ def process_networks(activities):
     summary_stats = {}
 
     for network_name in os.listdir(NETWORKS_DIR):
-        logging.info("Processing network:", network_name)
+        logging.info(f"Processing network: {network_name}")
 
         network_path = NETWORKS_DIR / network_name
         if "." not in network_name:
