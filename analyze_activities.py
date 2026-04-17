@@ -170,12 +170,13 @@ def process_networks(activities):
 
     return
 
-def main():
+def analyze_activities():
     logging.info("Starting activity analysis...")
     activities = load_activities()
     public_blob.save_compressed(json.loads(activities.to_json()), "strava_activities_geojson.geojson")
     process_networks(activities)
     logging.info("Activity analysis complete.")
+    return
 
 if __name__ == "__main__":
-    main()
+    analyze_activities()
