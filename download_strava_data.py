@@ -1,8 +1,8 @@
-import json
 import time
 import requests
 from dotenv import load_dotenv
 import os
+import logging
 
 from azure_blob_helper import BlobHelper
 public_blob = BlobHelper('public')
@@ -16,6 +16,8 @@ my_var = os.getenv('MY_VAR')
 CLIENT_ID = os.getenv('STRAVA_CLIENT_ID')
 CLIENT_SECRET = os.getenv('STRAVA_CLIENT_SECRET')
 
+logging.basicConfig(level=logging.INFO)
+
 def update_access_tokens():
 
     credentials = private_blob.load_data("strava_credentials.json")
@@ -24,7 +26,7 @@ def update_access_tokens():
     expires_at = credentials["expires_at"]
     
     if expires_at < int(time.time()):
-        print("Short-lived access token has expired. Refreshing...")
+        logging.info("Short-lived access token has expired. Refreshing...")
 
         url = "https://www.strava.com/oauth/token"
 
@@ -37,7 +39,7 @@ def update_access_tokens():
 
         response = requests.post(url, data=params)
         if response.status_code == 200:
-            print("Token refreshed successfully.")
+            logging.info("Token refreshed successfully.")
             #update credentials.json with new token data, selectively updating only the relevant fields
             new_data = response.json()
             credentials["access_token"] = new_data["access_token"]
@@ -46,11 +48,11 @@ def update_access_tokens():
             private_blob.save_data(credentials, "strava_credentials.json")
 
         else:
-            print("Failed to refresh token.")
-            print(response.text)
+            logging.error("Failed to refresh token.")
+            logging.error(response.text)
             return None
     else:
-        print("Access token is still valid.")
+        logging.info("Access token is still valid.")
     
     return credentials["access_token"]
 
@@ -77,20 +79,20 @@ def retrieve_activities():
         if response.status_code == 200:
             data = response.json()
             if not data:
-                print("No more activities found.")
+                logging.info("No more activities found.")
                 break
 
             all_activities.extend(data)
-            print(f"Retrieved page {page} with {len(data)} activities.")
+            logging.info(f"Retrieved page {page} with {len(data)} activities.")
         
         else:
-            print(f"Failed to retrieve activities: {response.status_code}")
-            print(response.text)
+            logging.error(f"Failed to retrieve activities: {response.status_code}")
+            logging.error(response.text)
             return None
         
     #write to blob storage as json
     public_blob.save_data(all_activities, "strava_raw_data.json")
-    print(f"Total activities retrieved and saved to blob: {len(all_activities)}")
+    logging.info(f"Total activities retrieved and saved to blob: {len(all_activities)}")
     return
 
 if __name__ == "__main__":

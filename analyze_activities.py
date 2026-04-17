@@ -2,6 +2,7 @@ import json
 import os
 import random
 from pathlib import Path
+import logging
 
 import geopandas as gpd
 import numpy as np
@@ -16,6 +17,7 @@ APP_DIR = Path("my-app")
 NETWORKS_DIR = Path("networks")
 ACTIVITIES_JSON = Path("activities.json")
 
+logging.basicConfig(level=logging.INFO)
 
 def decode_polyline(encoded: str):
     coords = []
@@ -128,7 +130,7 @@ def process_networks(activities):
     summary_stats = {}
 
     for network_name in os.listdir(NETWORKS_DIR):
-        print("Processing network:", network_name)
+        logging.info("Processing network:", network_name)
 
         network_path = NETWORKS_DIR / network_name
         if "." not in network_name:
@@ -169,9 +171,11 @@ def process_networks(activities):
     return
 
 def main():
+    logging.info("Starting activity analysis...")
     activities = load_activities()
     public_blob.save_compressed(json.loads(activities.to_json()), "strava_activities_geojson.geojson")
     process_networks(activities)
+    logging.info("Activity analysis complete.")
 
 if __name__ == "__main__":
     main()
