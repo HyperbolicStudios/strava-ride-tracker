@@ -6,7 +6,7 @@ from analyze_activities import analyze_activities
 
 app = func.FunctionApp()
 
-@app.timer_trigger(schedule="0 0 2 * * *", arg_name="myTimer", run_on_startup=False,
+@app.timer_trigger(schedule="0 0 2,8,20 * * *", arg_name="myTimer", run_on_startup=False,
               use_monitor=False)
 def daily_analysis(myTimer: func.TimerRequest) -> None:
     if myTimer.past_due:
